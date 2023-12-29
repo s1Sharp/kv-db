@@ -1,0 +1,1 @@
+option('NEED_DOC', type : 'boolean', value : false, description : 'flag to compile docs')
