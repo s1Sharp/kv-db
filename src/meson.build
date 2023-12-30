@@ -40,7 +40,7 @@ cpp_deps = [
 ]
 
 cpp_nn_exe = executable(
-    's1_db',
+    'server_db',
     sources      : cpp_files,
     dependencies : cpp_deps,
 )

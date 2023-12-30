@@ -29,5 +29,5 @@ clean:
 	rm -rf build/
 
 run: compile build/src/
-	build/src/s1_db
+	build/src/server_db
 

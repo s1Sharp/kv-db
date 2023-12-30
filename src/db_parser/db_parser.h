@@ -14,5 +14,5 @@
 #include <iostream>
 
 namespace project {
-	std::string hello();
-}  // namespace project
+	void serveParcer();
+}
