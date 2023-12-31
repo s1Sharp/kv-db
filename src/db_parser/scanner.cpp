@@ -422,6 +422,10 @@ static const flex_int16_t yy_chk[80] =
 #define YY_RESTORE_YY_MORE_OFFSET
 #line 1 "parser.ll"
 #line 2 "parser.ll"
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <sstream>
+
 #include "grammar.hpp"
 #include "scanner.hpp"
 
@@ -431,8 +435,8 @@ static const flex_int16_t yy_chk[80] =
 
 using namespace project;
 
-#line 435 "scanner.cpp"
-#line 436 "scanner.cpp"
+#line 439 "scanner.cpp"
+#line 440 "scanner.cpp"
 
 #define INITIAL 0
 
@@ -564,9 +568,9 @@ YY_DECL
 		}
 
 	{
-#line 23 "parser.ll"
+#line 27 "parser.ll"
 
-#line 570 "scanner.cpp"
+#line 574 "scanner.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -625,86 +629,86 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 24 "parser.ll"
+#line 28 "parser.ll"
 return Parser::token::LPAREN;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 25 "parser.ll"
+#line 29 "parser.ll"
 return Parser::token::RPAREN;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 27 "parser.ll"
+#line 31 "parser.ll"
 { std::cout << "SET" << std::endl; return Parser::token::SET; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 28 "parser.ll"
+#line 32 "parser.ll"
 { std::cout << "EXISTS" << std::endl; return Parser::token::EXISTS; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 29 "parser.ll"
+#line 33 "parser.ll"
 { std::cout << "GET" << std::endl; return Parser::token::GET; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 30 "parser.ll"
+#line 34 "parser.ll"
 { std::cout << "TYPE" << std::endl; return Parser::token::TYPE; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 31 "parser.ll"
+#line 35 "parser.ll"
 { std::cout << "KEYS" << std::endl; return Parser::token::KEYS; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 32 "parser.ll"
+#line 36 "parser.ll"
 { std::cout << "DEL" << std::endl; return Parser::token::DEL; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 33 "parser.ll"
+#line 37 "parser.ll"
 { std::cout << "STR_VALUE:" << yytext << std::endl; yylval->stringVal = new std::string(yytext, yyleng); return Parser::token::STR_VALUE; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 34 "parser.ll"
+#line 38 "parser.ll"
 { std::cout << "LIMIT" << std::endl; return Parser::token::LIMIT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 35 "parser.ll"
+#line 39 "parser.ll"
 { std::cout << "INTEGER" << std::endl; yylval->integerVal = atol(yytext); return Parser::token::INTEGER; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 36 "parser.ll"
+#line 40 "parser.ll"
 { std::cout << "SEMICOLON" << std::endl; return Parser::token::SEMICOLON; }
 	YY_BREAK
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 37 "parser.ll"
+#line 41 "parser.ll"
 { std::cout << "EOL" << std::endl; return Parser::token::EOL; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 38 "parser.ll"
+#line 42 "parser.ll"
 { /* Пропуск пробелов и табуляции */ }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 39 "parser.ll"
+#line 43 "parser.ll"
 { std::cerr << "Unknown token: " << yytext << std::endl; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 42 "parser.ll"
+#line 46 "parser.ll"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 708 "scanner.cpp"
+#line 712 "scanner.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1667,7 +1671,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 42 "parser.ll"
+#line 46 "parser.ll"
 
 
 int yyFlexLexer::yylex() {
@@ -1675,9 +1679,37 @@ int yyFlexLexer::yylex() {
 }
 
 int run_parser() {
-    project::Scanner scanner{ std::cin, std::cerr };
-    project::Parser parser{ &scanner };
+
+    project::dbContext ctx;
+
+    // Инициализация Readline
+    using_history();
+    char* input;
+    while ((input = readline(">> ")) != nullptr) {
+        // Проверка на выход
+        if (input == nullptr || std::string(input) == "exit") {
+            free(input);
+            break;
+        }
+
+        if (strlen(input) > 0) {
+            add_history(input);
+
+            std::cout << std::string(input) << std::endl;
+            auto s = std::string(input);
+            std::stringstream ss(s);
+            
+
+    project::Scanner scanner{ ss, std::cerr };
+    project::Parser parser{ &scanner, &ctx };
+    ctx.dbConnection = s;
+    // scanner.setContext(&ctx);
     std::cout.precision(10);
-    parser.parse();
+            parser.parse();
+            std::cout << "Вы ввели: " << input << std::endl;
+        }
+
+        free(input);
+    }
     return 0;
 }

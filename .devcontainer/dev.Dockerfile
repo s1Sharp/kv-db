@@ -36,6 +36,7 @@ RUN apt-get update && \
     libsqlite3-dev \
     qt6-base-dev \
     libboost1.81-all-dev \
+    libreadline-dev \
     flex \
     bison \
 && \

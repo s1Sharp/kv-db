@@ -45,13 +45,14 @@
 #ifndef YY_YY_GRAMMAR_HPP_INCLUDED
 # define YY_YY_GRAMMAR_HPP_INCLUDED
 // "%code requires" blocks.
-#line 40 "grammar.yy"
+#line 41 "grammar.yy"
 
     namespace project {
         class Scanner;
+        class dbContext;
     } // namespace project
 
-#line 55 "grammar.hpp"
+#line 56 "grammar.hpp"
 
 
 # include <cstdlib> // std::abort
@@ -187,7 +188,7 @@
 
 #line 7 "grammar.yy"
 namespace project {
-#line 191 "grammar.hpp"
+#line 192 "grammar.hpp"
 
 
 
@@ -205,13 +206,13 @@ namespace project {
     /// Symbol semantic values.
     union value_type
     {
-#line 32 "grammar.yy"
+#line 33 "grammar.yy"
 
     long long       integerVal;
     double          doubleVal;
     std::string*    stringVal;
 
-#line 215 "grammar.hpp"
+#line 216 "grammar.hpp"
 
     };
 #endif
@@ -429,7 +430,7 @@ namespace project {
     {};
 
     /// Build a parser object.
-    Parser (Scanner* scanner_yyarg);
+    Parser (Scanner* scanner_yyarg, dbContext* db_ctx_yyarg);
     virtual ~Parser ();
 
 #if 201103L <= YY_CPLUSPLUS
@@ -779,7 +780,7 @@ namespace project {
     /// Constants.
     enum
     {
-      yylast_ = 18,     ///< Last index in yytable_.
+      yylast_ = 17,     ///< Last index in yytable_.
       yynnts_ = 5,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
@@ -787,13 +788,14 @@ namespace project {
 
     // User arguments.
     Scanner* scanner;
+    dbContext* db_ctx;
 
   };
 
 
 #line 7 "grammar.yy"
 } // project
-#line 797 "grammar.hpp"
+#line 799 "grammar.hpp"
 
 
 

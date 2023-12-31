@@ -1,4 +1,8 @@
 %{
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <sstream>
+
 #include "grammar.hpp"
 #include "scanner.hpp"
 
@@ -46,9 +50,37 @@ int yyFlexLexer::yylex() {
 }
 
 int run_parser() {
-    project::Scanner scanner{ std::cin, std::cerr };
-    project::Parser parser{ &scanner };
+
+    project::dbContext ctx;
+
+    // Инициализация Readline
+    using_history();
+    char* input;
+    while ((input = readline(">> ")) != nullptr) {
+        // Проверка на выход
+        if (input == nullptr || std::string(input) == "exit") {
+            free(input);
+            break;
+        }
+
+        if (strlen(input) > 0) {
+            add_history(input);
+
+            std::cout << std::string(input) << std::endl;
+            auto s = std::string(input);
+            std::stringstream ss(s);
+            
+
+    project::Scanner scanner{ ss, std::cerr };
+    project::Parser parser{ &scanner, &ctx };
+    ctx.dbConnection = s;
+    // scanner.setContext(&ctx);
     std::cout.precision(10);
-    parser.parse();
+            parser.parse();
+            std::cout << "Вы ввели: " << input << std::endl;
+        }
+
+        free(input);
+    }
     return 0;
 }

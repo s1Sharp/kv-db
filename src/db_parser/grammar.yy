@@ -7,6 +7,7 @@
 %define api.namespace {project}
 // %define api.value.type variant
 %parse-param {Scanner* scanner}
+%parse-param {dbContext* db_ctx}
 
 
 /* add debug output code to generated parser. disable this for release
@@ -40,6 +41,7 @@ using namespace std;
 {
     namespace project {
         class Scanner;
+        class dbContext;
     } // namespace project
 } // %code requires
 
@@ -68,8 +70,9 @@ using namespace std;
 
 %%
 
+
 commands: /* пусто */
-        | commands command SEMICOLON EOL
+        | commands command SEMICOLON {  std::cout << "db connection " << db_ctx->dbConnection;  }
         ;
 
 command: SET STR_VALUE STR_VALUE

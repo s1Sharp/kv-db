@@ -1,3 +1,5 @@
+#include "db_parser.h"
+
 namespace project { // note: depends upon FlexLexer.h and grammar.hpp
 
 int run_parser();
@@ -9,6 +11,10 @@ public:
     Scanner(std::istream* arg_yyin = nullptr, std::ostream* arg_yyout = nullptr)
         : yyFlexLexer(arg_yyin, arg_yyout) {}
     int lex(Parser::semantic_type *yylval); // note: this is the prototype we need
+
+public:
+    void setContext(dbContext& _ctx) { this->ctx = &_ctx; }
+    dbContext* ctx;
 };
 
 } // namespace project

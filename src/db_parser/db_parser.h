@@ -15,4 +15,9 @@
 
 namespace project {
 	void serveParcer();
+
+ 	class dbContext	{
+	public:
+		std::string dbConnection;
+	};
 }

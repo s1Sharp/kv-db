@@ -32,6 +32,7 @@ parser_sources = ['db_parser.cpp'] + flex_bison_dep_sources
 
 # Bison and Flex dependencies
 flex_dep = dependency('libfl', static: true, required: true)
+readline_dep = dependency('readline', static: true, required: true)
 
 parser_lib = static_library('db_parser',
 				include_directories : inc,
@@ -44,7 +45,7 @@ parser_lib = static_library('db_parser',
 				dependencies: [
 						boost_deps,
 						flex_dep,
-						# bison_dep,
+						readline_dep,
 					]
 				)
 
