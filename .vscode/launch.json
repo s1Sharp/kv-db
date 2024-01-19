@@ -8,7 +8,7 @@
         "name": "(gdb) run debug server_db",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/build/src/server_db",
+        "program": "${workspaceFolder}/build/src/client/client_db",
         "cwd": "${workspaceFolder}",
         "MIMode": "gdb",
         "setupCommands": [

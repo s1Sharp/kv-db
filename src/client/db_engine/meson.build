@@ -7,6 +7,7 @@ engine_lib = static_library('db_engine',
 				sources: [engine_headers, engine_sources],
 				dependencies: [
 						boost_deps,
+						db_proto_dep,
 					]
 				)
 

@@ -45,7 +45,7 @@
 #ifndef YY_YY_GRAMMAR_HPP_INCLUDED
 # define YY_YY_GRAMMAR_HPP_INCLUDED
 // "%code requires" blocks.
-#line 41 "grammar.yy"
+#line 46 "grammar.yy"
 
     namespace project {
         class Scanner;
@@ -206,13 +206,14 @@ namespace project {
     /// Symbol semantic values.
     union value_type
     {
-#line 33 "grammar.yy"
+#line 37 "grammar.yy"
 
     long long       integerVal;
     double          doubleVal;
     std::string*    stringVal;
+    std::vector<std::string*>* commandList;
 
-#line 216 "grammar.hpp"
+#line 217 "grammar.hpp"
 
     };
 #endif
@@ -780,7 +781,7 @@ namespace project {
     /// Constants.
     enum
     {
-      yylast_ = 17,     ///< Last index in yytable_.
+      yylast_ = 18,     ///< Last index in yytable_.
       yynnts_ = 5,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
@@ -795,7 +796,7 @@ namespace project {
 
 #line 7 "grammar.yy"
 } // project
-#line 799 "grammar.hpp"
+#line 800 "grammar.hpp"
 
 
 

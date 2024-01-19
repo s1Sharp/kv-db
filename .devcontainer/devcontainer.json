@@ -25,7 +25,7 @@
             "mesonbuild.mesonbuild",
             "mhutchie.git-graph",
             "eamodio.gitlens",
-            
+            "spmeesseman.vscode-taskexplorer",
           ]
         }
     }

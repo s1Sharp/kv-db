@@ -39,6 +39,8 @@ RUN apt-get update && \
     libreadline-dev \
     flex \
     bison \
+    libgrpc++-dev \
+    protobuf-compiler-grpc \
 && \
     apt-get clean
 # && \

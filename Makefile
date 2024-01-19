@@ -28,6 +28,8 @@ compile: build
 clean:
 	rm -rf build/
 
-run: compile build/src/
-	build/src/server_db
+run_cli: compile build/src/
+	build/src/client/client_db
 
+run_ser: compile build/src/
+	build/src/server/server_db

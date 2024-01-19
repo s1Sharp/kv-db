@@ -11,7 +11,7 @@ yacc_sources = ['grammar.cpp']
 flex_gen_result = run_command(find_program('flex'), 'parser.ll')
 
 # Print the output and return code
-message('Flex command output:', flex_gen_result.stdout())
+message('Flex command output:', flex_gen_result.stderr())
 message('Flex command return code:', flex_gen_result.returncode())
 
 # Генерация grammar.cpp и grammar.hpp из grammar.yy
@@ -19,7 +19,7 @@ message('Flex command return code:', flex_gen_result.returncode())
 bison_gen_result = run_command(find_program('bison'), 'grammar.yy')
 
 # Print the output and return code
-message('Bison command output:', bison_gen_result.stdout())
+message('Bison command output:', bison_gen_result.stderr())
 message('Bison command return code:', bison_gen_result.returncode())
 
 

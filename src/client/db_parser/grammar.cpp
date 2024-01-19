@@ -37,7 +37,7 @@
 
 
 // First part of user prologue.
-#line 18 "grammar.yy"
+#line 20 "grammar.yy"
 
 #include <iostream>
 #include <cstdlib>
@@ -48,22 +48,24 @@
 #include <cmath>
 #include <FlexLexer.h>
 
+#include "db_engine/db_engine.h"
+
 using namespace std;
 
 
-#line 55 "grammar.cpp"
+#line 57 "grammar.cpp"
 
 
 #include "grammar.hpp"
 
 
 // Unqualified %code blocks.
-#line 49 "grammar.yy"
+#line 54 "grammar.yy"
 
     #include "scanner.hpp"
     #define yylex(x) scanner->lex(x)
 
-#line 67 "grammar.cpp"
+#line 69 "grammar.cpp"
 
 
 #ifndef YY_
@@ -137,7 +139,7 @@ using namespace std;
 
 #line 7 "grammar.yy"
 namespace project {
-#line 141 "grammar.cpp"
+#line 143 "grammar.cpp"
 
   /// Build a parser object.
   Parser::Parser (Scanner* scanner_yyarg, dbContext* db_ctx_yyarg)
@@ -342,9 +344,9 @@ namespace project {
     switch (yysym.kind ())
     {
       case symbol_kind::S_STR_VALUE: // "string"
-#line 63 "grammar.yy"
+#line 68 "grammar.yy"
                     { delete (yysym.value.stringVal); }
-#line 348 "grammar.cpp"
+#line 350 "grammar.cpp"
         break;
 
       default:
@@ -603,25 +605,47 @@ namespace project {
           switch (yyn)
             {
   case 3: // commands: commands command SEMICOLON
-#line 75 "grammar.yy"
-                                     {  std::cout << "db connection " << db_ctx->dbConnection;  }
-#line 609 "grammar.cpp"
-    break;
-
-  case 11: // key_pattern: "string" key_pattern
-#line 87 "grammar.yy"
-             { (yylhs.value.stringVal) = (yystack_[1].value.stringVal); }
-#line 615 "grammar.cpp"
-    break;
-
-  case 13: // limit_value: "integer"
-#line 91 "grammar.yy"
-            { (yylhs.value.integerVal) = (yystack_[0].value.integerVal); }
+#line 83 "grammar.yy"
+                                     { (yylhs.value.commandList) = (yystack_[2].value.commandList); if (!(yylhs.value.commandList)) (yylhs.value.commandList) = new std::vector<std::string*>(); (yylhs.value.commandList)->push_back((yystack_[1].value.stringVal));
+        auto v = *(yylhs.value.commandList);
+        std::cout << "vsize = " << v.size();
+        for (auto elem : v) {
+            std::cout << "elem: " << elem << std::endl;
+            auto s = *elem;
+            std::cout << s << std::endl;
+        } 
+     std::cout << "db connection " << db_ctx->dbConnection; 
+        send_message(*(yystack_[1].value.stringVal));
+}
 #line 621 "grammar.cpp"
     break;
 
+  case 4: // commands: commands SEMICOLON
+#line 94 "grammar.yy"
+                                      { (yylhs.value.commandList) = (yystack_[1].value.commandList); if (!(yylhs.value.commandList)) (yylhs.value.commandList) = new std::vector<std::string*>(); }
+#line 627 "grammar.cpp"
+    break;
 
-#line 625 "grammar.cpp"
+  case 5: // command: SET "string" "string"
+#line 98 "grammar.yy"
+                                 { (yylhs.value.stringVal) = new std::string(*(yystack_[1].value.stringVal) + *(yystack_[0].value.stringVal)); }
+#line 633 "grammar.cpp"
+    break;
+
+  case 12: // key_pattern: "string" key_pattern
+#line 107 "grammar.yy"
+             { (yylhs.value.stringVal) = (yystack_[1].value.stringVal); }
+#line 639 "grammar.cpp"
+    break;
+
+  case 14: // limit_value: "integer"
+#line 111 "grammar.yy"
+            { (yylhs.value.integerVal) = (yystack_[0].value.integerVal); }
+#line 645 "grammar.cpp"
+    break;
+
+
+#line 649 "grammar.cpp"
 
             default:
               break;
@@ -817,17 +841,17 @@ namespace project {
   const signed char
   Parser::yypact_[] =
   {
-      -7,     0,    -7,    -6,    -5,    -4,    -3,    -2,    -1,     4,
-       7,    -7,    -7,    -7,    -2,     1,    -7,    -7,    -7,    -7,
-      11,    -7,    -7
+      -7,     0,    -7,    -7,    -6,    -5,    -3,    -2,    -1,     7,
+       4,     8,    -7,    -7,    -7,    -1,     2,    -7,    -7,    -7,
+      -7,    12,    -7,    -7
   };
 
   const signed char
   Parser::yydefact_[] =
   {
-       2,     0,     1,     0,     0,     0,     0,    10,     0,     0,
-       0,     5,     6,     7,    10,     0,     9,     3,     4,    11,
-      12,    13,     8
+       2,     0,     1,     4,     0,     0,     0,     0,    11,     0,
+       0,     0,     6,     7,     8,    11,     0,    10,     3,     5,
+      12,    13,    14,     9
   };
 
   const signed char
@@ -839,43 +863,43 @@ namespace project {
   const signed char
   Parser::yydefgoto_[] =
   {
-       0,     1,     9,    15,    22
+       0,     1,    10,    16,    23
   };
 
   const signed char
   Parser::yytable_[] =
   {
-       2,    10,    11,    12,    13,    14,    16,    17,     3,     4,
-       5,     6,     7,     8,    18,    20,    21,    19
+       2,    11,    12,     3,    13,    14,    15,    18,     4,     5,
+       6,     7,     8,     9,    17,    19,    21,    22,    20
   };
 
   const signed char
   Parser::yycheck_[] =
   {
-       0,     7,     7,     7,     7,     7,     7,     3,     8,     9,
-      10,    11,    12,    13,     7,    14,     5,    14
+       0,     7,     7,     3,     7,     7,     7,     3,     8,     9,
+      10,    11,    12,    13,     7,     7,    14,     5,    15
   };
 
   const signed char
   Parser::yystos_[] =
   {
-       0,    18,     0,     8,     9,    10,    11,    12,    13,    19,
-       7,     7,     7,     7,     7,    20,     7,     3,     7,    20,
-      14,     5,    21
+       0,    18,     0,     3,     8,     9,    10,    11,    12,    13,
+      19,     7,     7,     7,     7,     7,    20,     7,     3,     7,
+      20,    14,     5,    21
   };
 
   const signed char
   Parser::yyr1_[] =
   {
-       0,    17,    18,    18,    19,    19,    19,    19,    19,    19,
-      20,    20,    21,    21
+       0,    17,    18,    18,    18,    19,    19,    19,    19,    19,
+      19,    20,    20,    21,    21
   };
 
   const signed char
   Parser::yyr2_[] =
   {
-       0,     2,     0,     3,     3,     2,     2,     2,     4,     2,
-       0,     2,     0,     1
+       0,     2,     0,     3,     2,     3,     2,     2,     2,     4,
+       2,     0,     2,     0,     1
   };
 
 
@@ -897,8 +921,8 @@ namespace project {
   const signed char
   Parser::yyrline_[] =
   {
-       0,    74,    74,    75,    78,    79,    80,    81,    82,    83,
-      86,    87,    90,    91
+       0,    82,    82,    83,    94,    98,    99,   100,   101,   102,
+     103,   106,   107,   110,   111
   };
 
   void
@@ -979,9 +1003,9 @@ namespace project {
 
 #line 7 "grammar.yy"
 } // project
-#line 983 "grammar.cpp"
+#line 1007 "grammar.cpp"
 
-#line 94 "grammar.yy"
+#line 114 "grammar.yy"
 
 
 void project::Parser::error(const std::string& msg) {

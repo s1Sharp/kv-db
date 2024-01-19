@@ -11,10 +11,12 @@
 #include <memory>
 #include <string>
 #include "db_parser/db_parser.h"
+#include "db_config/db_config.h"
 
 int main(int argc, char **argv)
 {
-    
+    auto cfg = project::loadConfig(argc, argv);
+    std::cout << "host " << cfg.getHost() << " port " << cfg.getPort() << " user " << cfg.getUser() << " pass " << cfg.getPass() << std::endl;
     project::serveParcer();
 	return 0;
 }

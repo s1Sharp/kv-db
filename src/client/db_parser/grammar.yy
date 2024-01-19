@@ -9,6 +9,8 @@
 %parse-param {Scanner* scanner}
 %parse-param {dbContext* db_ctx}
 
+/* write out a header file containing the token defines */
+%defines
 
 /* add debug output code to generated parser. disable this for release
  * versions. */
@@ -25,6 +27,8 @@
 #include <cmath>
 #include <FlexLexer.h>
 
+#include "db_engine/db_engine.h"
+
 using namespace std;
 
 %}
@@ -34,6 +38,7 @@ using namespace std;
     long long       integerVal;
     double          doubleVal;
     std::string*    stringVal;
+    std::vector<std::string*>* commandList;
 }
 
 
@@ -63,6 +68,10 @@ using namespace std;
 %destructor { delete $$; } STR_VALUE
 
 
+%type <commandList> commands
+%destructor { delete $$; } commandList
+
+
 %token SET EXISTS GET TYPE KEYS DEL LIMIT LPAREN RPAREN
 
 %type <stringVal> command key_pattern
@@ -70,12 +79,23 @@ using namespace std;
 
 %%
 
-
 commands: /* пусто */
-        | commands command SEMICOLON {  std::cout << "db connection " << db_ctx->dbConnection;  }
+        | commands command SEMICOLON { $$ = $1; if (!$$) $$ = new std::vector<std::string*>(); $$->push_back($2);
+        auto v = *$$;
+        std::cout << "vsize = " << v.size();
+        for (auto elem : v) {
+            std::cout << "elem: " << elem << std::endl;
+            auto s = *elem;
+            std::cout << s << std::endl;
+        } 
+     std::cout << "db connection " << db_ctx->dbConnection; 
+        send_message(*$2);
+}
+        | commands SEMICOLON          { $$ = $1; if (!$$) $$ = new std::vector<std::string*>(); }
         ;
 
-command: SET STR_VALUE STR_VALUE
+
+command: SET STR_VALUE STR_VALUE { $$ = new std::string(*$2 + *$3); }
         | EXISTS STR_VALUE
         | GET STR_VALUE
         | TYPE STR_VALUE
