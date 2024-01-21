@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file db_parser.h
  * @author Maksim Tsarkov (s1sharp.it@gmail.com)

@@ -26,8 +26,14 @@ message('Bison command return code:', bison_gen_result.returncode())
 flex_bison_dep_sources = lex_sources + yacc_sources
 flex_bison_dep_headers = lex_headers + yacc_headers
 
-parser_headers = ['db_parser.h'] + flex_bison_dep_headers
-parser_sources = ['db_parser.cpp'] + flex_bison_dep_sources
+parser_headers = [
+	'db_parser.h',
+	'db_command.h',
+] + flex_bison_dep_headers
+parser_sources = [
+	'db_parser.cpp',
+	'db_command.cpp',
+] + flex_bison_dep_sources
 
 
 # Bison and Flex dependencies

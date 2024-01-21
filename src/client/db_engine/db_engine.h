@@ -1,3 +1,5 @@
+#pragma once
+
 /**
  * @file db_document.h
  * @author Maksim Tsarkov (s1sharp.it@gmail.com)

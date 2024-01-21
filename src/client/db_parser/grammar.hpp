@@ -45,14 +45,16 @@
 #ifndef YY_YY_GRAMMAR_HPP_INCLUDED
 # define YY_YY_GRAMMAR_HPP_INCLUDED
 // "%code requires" blocks.
-#line 46 "grammar.yy"
+#line 49 "grammar.yy"
+
+    #include "db_parser/db_command.h"
 
     namespace project {
         class Scanner;
         class dbContext;
     } // namespace project
 
-#line 56 "grammar.hpp"
+#line 58 "grammar.hpp"
 
 
 # include <cstdlib> // std::abort
@@ -188,7 +190,7 @@
 
 #line 7 "grammar.yy"
 namespace project {
-#line 192 "grammar.hpp"
+#line 194 "grammar.hpp"
 
 
 
@@ -206,14 +208,15 @@ namespace project {
     /// Symbol semantic values.
     union value_type
     {
-#line 37 "grammar.yy"
+#line 39 "grammar.yy"
 
-    long long       integerVal;
-    double          doubleVal;
-    std::string*    stringVal;
+    long long           integerVal;
+    double              doubleVal;
+    ICommand*           commaVal;
+    std::string*        stringVal;
     std::vector<std::string*>* commandList;
 
-#line 217 "grammar.hpp"
+#line 220 "grammar.hpp"
 
     };
 #endif
@@ -294,7 +297,7 @@ namespace project {
         S_LPAREN = 15,                           // LPAREN
         S_RPAREN = 16,                           // RPAREN
         S_YYACCEPT = 17,                         // $accept
-        S_commands = 18,                         // commands
+        S_input = 18,                            // input
         S_command = 19,                          // command
         S_key_pattern = 20,                      // key_pattern
         S_limit_value = 21                       // limit_value
@@ -781,9 +784,9 @@ namespace project {
     /// Constants.
     enum
     {
-      yylast_ = 18,     ///< Last index in yytable_.
+      yylast_ = 21,     ///< Last index in yytable_.
       yynnts_ = 5,  ///< Number of nonterminal symbols.
-      yyfinal_ = 2 ///< Termination state number.
+      yyfinal_ = 16 ///< Termination state number.
     };
 
 
@@ -796,7 +799,7 @@ namespace project {
 
 #line 7 "grammar.yy"
 } // project
-#line 800 "grammar.hpp"
+#line 803 "grammar.hpp"
 
 
 

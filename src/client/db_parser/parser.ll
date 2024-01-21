@@ -1,4 +1,6 @@
 %{
+#pragma once
+
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sstream>
@@ -67,7 +69,7 @@ int run_parser() {
             add_history(input);
 
             std::cout << std::string(input) << std::endl;
-            auto s = std::string(input);
+            auto s = std::string(input) + ";";
             std::stringstream ss(s);
             
 

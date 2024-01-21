@@ -18,6 +18,8 @@
 
 
 %{
+#pragma once
+
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
@@ -35,15 +37,18 @@ using namespace std;
 
 
 %union {
-    long long       integerVal;
-    double          doubleVal;
-    std::string*    stringVal;
+    long long           integerVal;
+    double              doubleVal;
+    ICommand*           commaVal;
+    std::string*        stringVal;
     std::vector<std::string*>* commandList;
 }
 
 
 %code requires
 {
+    #include "db_parser/db_command.h"
+
     namespace project {
         class Scanner;
         class dbContext;
@@ -65,8 +70,10 @@ using namespace std;
 %token <doubleVal> 	DOUBLE		"double"
 %token <stringVal> 	STR_VALUE	"string"
 
-%destructor { delete $$; } STR_VALUE
 
+%destructor { delete $$; } commaVal
+
+%destructor { delete $$; } STR_VALUE
 
 %type <commandList> commands
 %destructor { delete $$; } commandList
@@ -74,29 +81,19 @@ using namespace std;
 
 %token SET EXISTS GET TYPE KEYS DEL LIMIT LPAREN RPAREN
 
-%type <stringVal> command key_pattern
+%type <commaVal>   command
+%type <stringVal>  key_pattern
 %type <integerVal> limit_value
 
 %%
 
-commands: /* пусто */
-        | commands command SEMICOLON { $$ = $1; if (!$$) $$ = new std::vector<std::string*>(); $$->push_back($2);
-        auto v = *$$;
-        std::cout << "vsize = " << v.size();
-        for (auto elem : v) {
-            std::cout << "elem: " << elem << std::endl;
-            auto s = *elem;
-            std::cout << s << std::endl;
-        } 
-     std::cout << "db connection " << db_ctx->dbConnection; 
-        send_message(*$2);
+input: command SEMICOLON { std::cout << "input command ENDLINE " << $1 << std::endl; YYABORT; }
+      ;
+
+command: SET STR_VALUE STR_VALUE { 
+    $$ = new SetCommand(*$2, *$3); std::cout << $$; 
 }
-        | commands SEMICOLON          { $$ = $1; if (!$$) $$ = new std::vector<std::string*>(); }
-        ;
-
-
-command: SET STR_VALUE STR_VALUE { $$ = new std::string(*$2 + *$3); }
-        | EXISTS STR_VALUE
+        | EXISTS STR_VALUE END
         | GET STR_VALUE
         | TYPE STR_VALUE
         | KEYS key_pattern LIMIT limit_value

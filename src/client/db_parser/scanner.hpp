@@ -1,3 +1,5 @@
+#pragma once
+
 #include "db_parser.h"
 
 namespace project { // note: depends upon FlexLexer.h and grammar.hpp
